@@ -30,7 +30,11 @@
                     >
                     <span class="text-lg font-extrabold tracking-tight">Fine Nectar</span>
                 </a>
-                <a href="#order" class="rounded-full bg-zinc-900 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-zinc-700">Pesan Sekarang</a>
+                <nav class="flex items-center gap-3 sm:gap-4">
+                    <a href="{{ route('terms') }}" class="text-sm font-semibold text-zinc-700 transition hover:text-zinc-900">Syarat & Ketentuan</a>
+                    <a href="{{ route('contact') }}" class="text-sm font-semibold text-zinc-700 transition hover:text-zinc-900">Kontak CS</a>
+                    <a href="#order" class="rounded-full bg-zinc-900 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-zinc-700">Pesan Sekarang</a>
+                </nav>
             </header>
 
             <main>
@@ -60,12 +64,12 @@
                             <span class="bg-gradient-to-r from-amber-500 to-orange-500 bg-clip-text text-transparent">Fine Nectar</span>
                         </h1>
                         <p class="mt-4 max-w-xl text-base text-zinc-700 sm:text-lg">
-                            Madu murni unik premium untuk bantu jaga kesehatan tubuh, daya tahan, dan stamina saat aktivitas padat. Manis unik alami tanpa drama, cocok buat rutinitas pagi dan camilan
+                            Madu murni premium Fine Nectar dengan isi bersih <span class="font-bold text-zinc-900">200ml per kemasan</span> untuk bantu jaga kesehatan tubuh, daya tahan, dan stamina saat aktivitas padat. Cocok buat rutinitas pagi, campuran minuman, dan camilan sehat harian.
                         </p>
 
                         <div class="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
-                            <a href="#order" class="inline-flex items-center justify-center rounded-full bg-zinc-900 px-6 py-3 text-sm font-semibold text-white transition hover:bg-zinc-700">
-                                Order Sekarang
+                            <a href="https://api.whatsapp.com/send/?phone=6285859714058&text=Halo%21+Saya+mau+menanyakan+Madu+Fine+Nectar+yang+Saya+lihat+dari+Website&type=phone_number&app_absent=0" class="inline-flex items-center justify-center rounded-full bg-zinc-900 px-6 py-3 text-sm font-semibold text-white transition hover:bg-zinc-700">
+                            Kirim pesan whatsapp
                             </a>
                             <a href="#manfaat" class="inline-flex items-center justify-center rounded-full border border-zinc-300 bg-white px-6 py-3 text-sm font-semibold text-zinc-900 transition hover:border-zinc-900">
                                 Lihat Manfaat
@@ -109,9 +113,24 @@
                             >
                             <div class="mt-3 rounded-2xl bg-zinc-900 p-4 text-white">
                                 <p class="text-xs uppercase tracking-wide text-zinc-300">Fine Nectar Signature</p>
-                                <p class="mt-1 text-sm font-semibold">Rasa unik natural tanpa bikin enek dikonsumsi terus</p>
+                                <p class="mt-1 text-sm font-semibold">Isi bersih 200ml • Rasa unik natural tanpa bikin enek dikonsumsi rutin</p>
                                 <p class="mt-2 text-lg font-extrabold text-amber-300">Harga launching: Rp35.000</p>
                             </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="mx-auto w-full max-w-6xl px-4 pb-16 sm:px-6 lg:px-8">
+                    <div class="rounded-3xl bg-white p-6 ring-1 ring-zinc-200 sm:p-7">
+                        <p class="text-sm font-semibold text-amber-700">Detail Produk Fine Nectar</p>
+                        <h2 class="mt-2 text-2xl font-extrabold tracking-tight sm:text-3xl">Informasi produk yang Anda terima</h2>
+                        <div class="mt-5 grid gap-3 text-sm text-zinc-700 sm:grid-cols-2">
+                            <div class="rounded-2xl bg-amber-50 px-4 py-3"><span class="font-semibold text-zinc-900">Nama Produk:</span> Fine Nectar Honey</div>
+                            <div class="rounded-2xl bg-amber-50 px-4 py-3"><span class="font-semibold text-zinc-900">Isi Bersih:</span> 200ml per kemasan</div>
+                            <div class="rounded-2xl bg-amber-50 px-4 py-3"><span class="font-semibold text-zinc-900">Komposisi:</span> 100% madu alami tanpa pemanis tambahan</div>
+                            <div class="rounded-2xl bg-amber-50 px-4 py-3"><span class="font-semibold text-zinc-900">Penyimpanan:</span> Simpan di suhu ruang dan tutup rapat setelah dibuka</div>
+                            <div class="rounded-2xl bg-amber-50 px-4 py-3"><span class="font-semibold text-zinc-900">Masa Simpan:</span> 12 bulan sejak tanggal produksi</div>
+                            <div class="rounded-2xl bg-amber-50 px-4 py-3"><span class="font-semibold text-zinc-900">Kategori:</span> Produk konsumsi harian</div>
                         </div>
                     </div>
                 </section>
@@ -175,7 +194,7 @@
                         <div class="rounded-3xl bg-white p-6 ring-1 ring-zinc-200 sm:p-7">
                             <p class="text-xs uppercase tracking-wide text-amber-700">Checkout Fine Nectar</p>
                             <h3 class="mt-2 text-2xl font-extrabold tracking-tight">Bayar pakai QRIS atau COD</h3>
-                            <p class="mt-2 text-sm text-zinc-600">Harga per botol: <span class="font-bold text-zinc-900">Rp35.000</span></p>
+                            <p class="mt-2 text-sm text-zinc-600">Harga per kemasan: <span class="font-bold text-zinc-900">Rp35.000</span></p>
 
                             <form action="{{ route('checkout.store') }}" method="POST" class="mt-6 space-y-4">
                                 @csrf
@@ -206,7 +225,7 @@
 
                                 <div class="grid gap-4 sm:grid-cols-2">
                                     <div>
-                                        <label for="quantity" class="mb-1 block text-sm font-semibold text-zinc-800">Jumlah botol</label>
+                                        <label for="quantity" class="mb-1 block text-sm font-semibold text-zinc-800">Jumlah Pcs</label>
                                         <input id="quantity" name="quantity" type="number" min="1" value="{{ old('quantity', 1) }}" required class="w-full rounded-xl border border-zinc-300 px-4 py-3 text-sm outline-none transition focus:border-zinc-900">
                                         @error('quantity')
                                             <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
@@ -236,7 +255,7 @@
                             <ul class="mt-4 space-y-3 text-sm text-zinc-700">
                                 <li>• <span class="font-semibold text-zinc-900">QRIS:</span> setelah klik "Buat Pesanan", kamu akan diarahkan ke halaman pembayaran Tripay untuk scan QR.</li>
                                 <li>• <span class="font-semibold text-zinc-900">COD:</span> pesanan langsung masuk, lalu tim Fine Nectar hubungi kamu untuk konfirmasi pengiriman.</li>
-                                <li>• Harga produk tetap <span class="font-semibold text-zinc-900">Rp35.000/botol</span> (belum termasuk ongkir).</li>
+                                <li>• Harga produk tetap <span class="font-semibold text-zinc-900">Rp35.000/kemasan</span> (belum termasuk ongkir).</li>
                             </ul>
                         </div>
                     </div>
@@ -244,9 +263,25 @@
             </main>
 
             <footer class="border-t border-zinc-200 bg-white/70">
-                <div class="mx-auto flex w-full max-w-6xl flex-col gap-2 px-4 py-5 text-xs text-zinc-600 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
-                    <p>© {{ date('Y') }} Fine Nectar. Pure honey, pure energy.</p>
-                    <p>Made for modern healthy lifestyle.</p>
+                <div class="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
+                    <div class="grid gap-6 mb-6 md:grid-cols-2">
+                        <div>
+                            <p class="text-base font-semibold text-zinc-900 mb-2">TENTANG FINE NECTAR</p>
+                            <p class="text-sm text-zinc-600">© {{ date('Y') }} Fine Nectar. Pure honey, pure energy. Made for modern healthy lifestyle.</p>
+                        </div>
+                        <div>
+                            <p class="text-base font-semibold text-zinc-900 mb-2">INFORMASI PEMILIK BRAND</p>
+                            <p class="text-sm text-zinc-600">
+                                <span class="block">Fine Nectar</span>
+                                <span class="block">Jember, Jawa Timur</span>
+                                <span class="block font-medium text-zinc-900 mt-1">Hubungi: 085859714058</span>
+                            </p>
+                            <div class="mt-3 flex flex-col gap-1 text-sm">
+                                <a href="{{ route('terms') }}" class="font-semibold text-zinc-800 hover:text-zinc-900">Lihat Syarat & Ketentuan</a>
+                                <a href="{{ route('contact') }}" class="font-semibold text-zinc-800 hover:text-zinc-900">Kontak Customer Service</a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </footer>
         </div>

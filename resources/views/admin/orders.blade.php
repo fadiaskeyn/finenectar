@@ -39,10 +39,26 @@
                                 <th class="px-4 py-3 font-semibold">Metode</th>
                                 <th class="px-4 py-3 font-semibold">Total</th>
                                 <th class="px-4 py-3 font-semibold">Status</th>
+                                <th class="px-4 py-3 font-semibold">Aksi</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-zinc-100">
                             @forelse ($orders as $order)
+                                @php
+                                    $paymentLink = $order->tripay_checkout_url ?: $order->tripay_qr_url;
+                                    $waPhone = preg_replace('/\D+/', '', (string) $order->customer_phone);
+
+                                    if (str_starts_with($waPhone, '0')) {
+                                        $waPhone = '62' . substr($waPhone, 1);
+                                    } elseif (str_starts_with($waPhone, '8')) {
+                                        $waPhone = '62' . $waPhone;
+                                    }
+
+                                    $waMessage = 'hy kak ayo Fine Nectar nya di bayar sebelum di serepet orang lain,stocknya terus berkurang lohhh..';
+                                    $waUrl = ($waPhone && $paymentLink)
+                                        ? 'https://wa.me/' . $waPhone . '?text=' . rawurlencode($waMessage . ' ' . $paymentLink)
+                                        : null;
+                                @endphp
                                 <tr>
                                     <td class="px-4 py-3">{{ $order->created_at?->format('d M Y H:i') }}</td>
                                     <td class="px-4 py-3 font-semibold text-zinc-800">{{ $order->customer_name }}</td>
@@ -55,10 +71,29 @@
                                             {{ $order->status }}
                                         </span>
                                     </td>
+                                    <td class="px-4 py-3">
+                                        <div class="flex flex-wrap gap-2">
+                                            @if ($paymentLink)
+                                                <a href="{{ $paymentLink }}" target="_blank" class="rounded-full bg-zinc-900 px-3 py-1 text-xs font-semibold text-white hover:bg-zinc-700">
+                                                    Link Pembayaran
+                                                </a>
+                                            @endif
+
+                                            @if ($waUrl)
+                                                <a href="{{ $waUrl }}" target="_blank" class="rounded-full border border-zinc-300 bg-white px-3 py-1 text-xs font-semibold text-zinc-800 hover:border-zinc-900">
+                                                    Reminder WA
+                                                </a>
+                                            @endif
+
+                                            @if (! $paymentLink)
+                                                <span class="text-xs text-zinc-400">-</span>
+                                            @endif
+                                        </div>
+                                    </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="7" class="px-4 py-8 text-center text-zinc-500">Belum ada pesanan.</td>
+                                    <td colspan="8" class="px-4 py-8 text-center text-zinc-500">Belum ada pesanan.</td>
                                 </tr>
                             @endforelse
                         </tbody>

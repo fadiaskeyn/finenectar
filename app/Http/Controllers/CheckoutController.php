@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use Throwable;
 
 class CheckoutController extends Controller
 {
@@ -33,6 +34,27 @@ class CheckoutController extends Controller
 
         $quantity = (int) $validated['quantity'];
         $totalAmount = self::UNIT_PRICE * $quantity;
+
+        if ($validated['payment_method'] === 'qris') {
+            $existingPendingQrisOrder = Order::query()
+                ->where('payment_method', 'qris')
+                ->where('status', 'waiting_payment')
+                ->where('customer_phone', $validated['customer_phone'])
+                ->where('total_amount', $totalAmount)
+                ->where('created_at', '>=', now()->subDay())
+                ->latest()
+                ->first();
+
+            if ($existingPendingQrisOrder) {
+                $activePaymentLink = $existingPendingQrisOrder->tripay_checkout_url ?: $existingPendingQrisOrder->tripay_qr_url;
+
+                if ($activePaymentLink) {
+                    return redirect()->away($activePaymentLink);
+                }
+
+                return redirect('/#order')->with('error', 'Kamu masih punya transaksi QRIS aktif. Selesaikan pembayaran sebelumnya dulu ya.');
+            }
+        }
 
         $order = Order::create([
             'customer_name' => $validated['customer_name'],
@@ -84,35 +106,70 @@ class CheckoutController extends Controller
             'signature' => $signature,
         ];
 
-        $response = Http::withToken($apiKey)
-            ->acceptJson()
-            ->post($baseUrl . '/transaction/create', $payload);
+        try {
+            $response = Http::withToken($apiKey)
+                ->acceptJson()
+                ->post($baseUrl . '/transaction/create', $payload);
 
-        if (! $response->successful() || ! data_get($response->json(), 'success')) {
+            if (! $response->successful() || ! data_get($response->json(), 'success')) {
+                $order->update([
+                    'status' => 'tripay_failed',
+                    'tripay_response' => $response->json(),
+                ]);
+
+                if (config('app.debug')) {
+                    dd([
+                        'message' => 'Gagal membuat transaksi QRIS ke Tripay',
+                        'http_status' => $response->status(),
+                        'response' => $response->json(),
+                        'payload' => $payload,
+                    ]);
+                }
+
+                return redirect('/#order')->with('error', 'Gagal membuat transaksi QRIS. Coba lagi beberapa saat.');
+            }
+
+            $tripayData = data_get($response->json(), 'data', []);
+
             $order->update([
-                'status' => 'tripay_failed',
+                'status' => 'waiting_payment',
+                'tripay_reference' => data_get($tripayData, 'reference'),
+                'tripay_checkout_url' => data_get($tripayData, 'checkout_url'),
+                'tripay_qr_url' => data_get($tripayData, 'qr_url') ?: data_get($tripayData, 'qr_string'),
                 'tripay_response' => $response->json(),
+            ]);
+
+            $checkoutUrl = data_get($tripayData, 'checkout_url');
+            if ($checkoutUrl) {
+                return redirect()->away($checkoutUrl);
+            }
+
+            return redirect('/#order')->with('success', 'Transaksi QRIS berhasil dibuat. Cek detail pembayaran pada dashboard Tripay.');
+        } catch (Throwable $exception) {
+            $order->update([
+                'status' => 'tripay_exception',
+                'tripay_response' => [
+                    'message' => $exception->getMessage(),
+                ],
+            ]);
+
+            if (config('app.debug')) {
+                dd([
+                    'message' => 'Exception saat membuat transaksi QRIS',
+                    'error' => $exception->getMessage(),
+                    'file' => $exception->getFile(),
+                    'line' => $exception->getLine(),
+                    'payload' => $payload,
+                ]);
+            }
+
+            Log::error('Tripay QRIS transaction error', [
+                'order_id' => $order->id,
+                'exception' => $exception,
             ]);
 
             return redirect('/#order')->with('error', 'Gagal membuat transaksi QRIS. Coba lagi beberapa saat.');
         }
-
-        $tripayData = data_get($response->json(), 'data', []);
-
-        $order->update([
-            'status' => 'waiting_payment',
-            'tripay_reference' => data_get($tripayData, 'reference'),
-            'tripay_checkout_url' => data_get($tripayData, 'checkout_url'),
-            'tripay_qr_url' => data_get($tripayData, 'qr_url') ?: data_get($tripayData, 'qr_string'),
-            'tripay_response' => $response->json(),
-        ]);
-
-        $checkoutUrl = data_get($tripayData, 'checkout_url');
-        if ($checkoutUrl) {
-            return redirect()->away($checkoutUrl);
-        }
-
-        return redirect('/#order')->with('success', 'Transaksi QRIS berhasil dibuat. Cek detail pembayaran pada dashboard Tripay.');
     }
 
     public function callback(Request $request): JsonResponse
