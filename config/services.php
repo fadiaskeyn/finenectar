@@ -43,4 +43,9 @@ return [
         'qris_channel' => env('TRIPAY_QRIS_CHANNEL', 'QRIS2'),
     ],
 
+    'turnstile' => [
+        'site_key' => env('TURNSTILE_SITE_KEY'),
+        'secret_key' => env('TURNSTILE_SECRET_KEY'),
+    ],
+
 ];

@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 8.0.45, for Linux (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.46, for Linux (x86_64)
 --
 -- Host: localhost    Database: finenectar
 -- ------------------------------------------------------
--- Server version	8.0.45-0ubuntu0.24.04.1
+-- Server version	8.0.46-0ubuntu0.24.04.2
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -37,7 +37,6 @@ CREATE TABLE `cache` (
 
 LOCK TABLES `cache` WRITE;
 /*!40000 ALTER TABLE `cache` DISABLE KEYS */;
-INSERT INTO `cache` VALUES ('laravel-cache-2be2b0608bcc1788003fd9525424b40c','i:1;',1773739957),('laravel-cache-2be2b0608bcc1788003fd9525424b40c:timer','i:1773739957;',1773739957);
 /*!40000 ALTER TABLE `cache` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -270,7 +269,7 @@ CREATE TABLE `sessions` (
 
 LOCK TABLES `sessions` WRITE;
 /*!40000 ALTER TABLE `sessions` DISABLE KEYS */;
-INSERT INTO `sessions` VALUES ('6wPzoXFsQ5yHvVmBEJZ3dAbph1HtCUL3QXL34qbK',NULL,'127.0.0.1','Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36','YTozOntzOjY6Il90b2tlbiI7czo0MDoicGdraEIxZmR5cE5KY2RvbENPeDlqN3FNN2w2ekpDWGhmOExHb3lGNSI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6MjE6Imh0dHA6Ly9sb2NhbGhvc3Q6ODAwMCI7czo1OiJyb3V0ZSI7Tjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==',1773559474),('CE6Qqg5H3yis6S0eaIgsxPQpiuX4n6XMMA91KlLh',NULL,'127.0.0.1','Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36','YTozOntzOjY6Il90b2tlbiI7czo0MDoiQ2hmSUFEdjBOSHloWm9vdzRlTDZqdFUyRzZKaWE1dWZQOGZMZmpScyI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6MjE6Imh0dHA6Ly9sb2NhbGhvc3Q6ODAwMCI7czo1OiJyb3V0ZSI7Tjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==',1773521506),('MJqJqjKhCLLTtCOOo8MpqI1Xr3UXIVnbdrCAiFMd',2,'127.0.0.1','Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36','YTo1OntzOjY6Il90b2tlbiI7czo0MDoiM0xSVmhsVDBHVG9HQ2VtV2huMzNpemQ4N0Njc1NId3JrTGh4TGY1TyI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6Mjc6Imh0dHA6Ly9sb2NhbGhvc3Q6ODAwMC9sb2dpbiI7czo1OiJyb3V0ZSI7czo1OiJsb2dpbiI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fXM6MzoidXJsIjthOjA6e31zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aToyO30=',1773742575);
+INSERT INTO `sessions` VALUES ('9qSYR4tdpWRNOQYcpq5tO3q7RIbyCBfDKKynvaSJ',NULL,'127.0.0.1','Mozilla/5.0 (iPhone; CPU iPhone OS 18_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Mobile/15E148 Safari/604.1','YTozOntzOjY6Il90b2tlbiI7czo0MDoiazdrd3VPS2g0Q1VUZm8yY3Exb1pGYnBONmk2T2ZoQm5FNDZqa0dkSyI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6MjE6Imh0dHA6Ly9sb2NhbGhvc3Q6ODAwMCI7czo1OiJyb3V0ZSI7Tjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==',1773977505),('aXxbWG21v5Nnr9RNA1QiHfrvz7WVWf0SturayW3R',NULL,'127.0.0.1','Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36','YTozOntzOjY6Il90b2tlbiI7czo0MDoiVWRvTGQ0dFAzaXpyNlVUTFloeTRQcW8yN1VuZjhiR01mM2tLZDBkMSI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6MjE6Imh0dHA6Ly9sb2NhbGhvc3Q6ODAwMCI7czo1OiJyb3V0ZSI7Tjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==',1773974490),('fmY8qwHCPfcNfFTnAC3y6TxYOy0LfbbQ66rez5Op',NULL,'127.0.0.1','Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36','YTozOntzOjY6Il90b2tlbiI7czo0MDoiaTVXa3RSaXlTMlMyeFRKMmJjTm1GR3Jrd3hPajhlWUhCcTV3aUQ2QyI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6MjE6Imh0dHA6Ly9sb2NhbGhvc3Q6ODAwMCI7czo1OiJyb3V0ZSI7Tjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==',1774007450);
 /*!40000 ALTER TABLE `sessions` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -317,4 +316,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-03-17 22:01:39
+-- Dump completed on 2026-06-18 18:41:54

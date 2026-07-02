@@ -19,12 +19,20 @@
                     <p class="text-sm text-zinc-600">Monitoring order QRIS dan COD Fine Nectar.</p>
                 </div>
 
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-                    <button type="submit" class="rounded-full bg-zinc-900 px-4 py-2 text-sm font-semibold text-white hover:bg-zinc-700">
-                        Logout
-                    </button>
-                </form>
+                <div class="flex flex-wrap gap-2">
+                    <a href="{{ route('admin.whatsapp.index') }}" class="rounded-full border border-amber-300 bg-amber-50 px-4 py-2 text-sm font-semibold text-amber-900 hover:border-amber-500">
+                        WhatsApp Login
+                    </a>
+                    <a href="{{ route('admin.products.index') }}" class="rounded-full border border-zinc-300 bg-white px-4 py-2 text-sm font-semibold hover:border-zinc-900">
+                        Produk
+                    </a>
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit" class="rounded-full bg-zinc-900 px-4 py-2 text-sm font-semibold text-white hover:bg-zinc-700">
+                            Logout
+                        </button>
+                    </form>
+                </div>
             </div>
 
             <div class="overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-zinc-200">
@@ -34,6 +42,7 @@
                             <tr>
                                 <th class="px-4 py-3 font-semibold">Tanggal</th>
                                 <th class="px-4 py-3 font-semibold">Nama</th>
+                                <th class="px-4 py-3 font-semibold">Produk</th>
                                 <th class="px-4 py-3 font-semibold">Phone</th>
                                 <th class="px-4 py-3 font-semibold">Qty</th>
                                 <th class="px-4 py-3 font-semibold">Metode</th>
@@ -62,10 +71,16 @@
                                 <tr>
                                     <td class="px-4 py-3">{{ $order->created_at?->format('d M Y H:i') }}</td>
                                     <td class="px-4 py-3 font-semibold text-zinc-800">{{ $order->customer_name }}</td>
+                                    <td class="px-4 py-3">{{ $order->product_name ?: 'Fine Nectar Honey' }}</td>
                                     <td class="px-4 py-3">{{ $order->customer_phone }}</td>
                                     <td class="px-4 py-3">{{ $order->quantity }}</td>
                                     <td class="px-4 py-3 uppercase">{{ $order->payment_method }}</td>
-                                    <td class="px-4 py-3">Rp{{ number_format($order->total_amount, 0, ',', '.') }}</td>
+                                    <td class="px-4 py-3">
+                                        <div class="font-semibold">Rp{{ number_format($order->total_amount, 0, ',', '.') }}</div>
+                                        <div class="text-xs text-zinc-500">
+                                            Ongkir: {{ $order->shipping_amount > 0 ? 'Rp' . number_format($order->shipping_amount, 0, ',', '.') : 'Free' }}
+                                        </div>
+                                    </td>
                                     <td class="px-4 py-3">
                                         <span class="rounded-full bg-zinc-100 px-3 py-1 text-xs font-semibold uppercase text-zinc-700">
                                             {{ $order->status }}
@@ -93,7 +108,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="8" class="px-4 py-8 text-center text-zinc-500">Belum ada pesanan.</td>
+                                    <td colspan="9" class="px-4 py-8 text-center text-zinc-500">Belum ada pesanan.</td>
                                 </tr>
                             @endforelse
                         </tbody>

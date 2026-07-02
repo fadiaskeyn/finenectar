@@ -13,8 +13,12 @@ class Order extends Model
         'customer_name',
         'customer_phone',
         'customer_address',
+        'product_id',
+        'product_name',
         'quantity',
         'unit_price',
+        'subtotal_amount',
+        'shipping_amount',
         'total_amount',
         'payment_method',
         'status',
@@ -28,4 +32,9 @@ class Order extends Model
     protected $casts = [
         'tripay_response' => 'array',
     ];
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
 }
