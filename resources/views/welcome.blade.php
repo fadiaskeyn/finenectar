@@ -334,7 +334,7 @@
                                     </div>
 
                                     <div class="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
-                                        <span class="font-semibold text-emerald-900">Ongkir:</span>
+                                    <span class="font-semibold text-emerald-900">Ongkir:</span>
                                         <span id="shipping-status">{{ $checkoutProduct?->is_free_shipping ? 'Free ongkir.' : 'Ongkir belum termasuk, akan dikonfirmasi setelah checkout.' }}</span>
                                     </div>
 

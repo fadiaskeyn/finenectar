@@ -2,7 +2,7 @@
 --
 -- Host: localhost    Database: finenectar
 -- ------------------------------------------------------
--- Server version	8.0.46-0ubuntu0.24.04.2
+-- Server version	8.0.46-0ubuntu0.24.04.3
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -37,6 +37,7 @@ CREATE TABLE `cache` (
 
 LOCK TABLES `cache` WRITE;
 /*!40000 ALTER TABLE `cache` DISABLE KEYS */;
+INSERT INTO `cache` VALUES ('finenectar-cache-2be2b0608bcc1788003fd9525424b40c','i:1;',1782559956),('finenectar-cache-2be2b0608bcc1788003fd9525424b40c:timer','i:1782559956;',1782559956),('finenectar-cache-da4b9237bacccdf19c0760cab7aec4a8359010b0','i:1;',1782545105),('finenectar-cache-da4b9237bacccdf19c0760cab7aec4a8359010b0:timer','i:1782545105;',1782545105),('finenectar-cache-e84c77ce34660901a80d6252755fccf0','i:3;',1782537969),('finenectar-cache-e84c77ce34660901a80d6252755fccf0:timer','i:1782537969;',1782537969),('finenectar-cache-fadiaskeyn@gmail.com|127.0.0.1','i:3;',1782537970),('finenectar-cache-fadiaskeyn@gmail.com|127.0.0.1:timer','i:1782537970;',1782537970),('finenectara-cache-2be2b0608bcc1788003fd9525424b40c','i:1;',1783006836),('finenectara-cache-2be2b0608bcc1788003fd9525424b40c:timer','i:1783006836;',1783006836),('finenectara-cache-5c785c036466adea360111aa28563bfd556b5fba','i:18;',1782992072),('finenectara-cache-5c785c036466adea360111aa28563bfd556b5fba:timer','i:1782992072;',1782992072),('laravel-cache-2be2b0608bcc1788003fd9525424b40c','i:1;',1782537882),('laravel-cache-2be2b0608bcc1788003fd9525424b40c:timer','i:1782537882;',1782537882),('laravel-cache-da4b9237bacccdf19c0760cab7aec4a8359010b0','i:1;',1782118880),('laravel-cache-da4b9237bacccdf19c0760cab7aec4a8359010b0:timer','i:1782118880;',1782118880);
 /*!40000 ALTER TABLE `cache` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -166,7 +167,7 @@ CREATE TABLE `migrations` (
   `migration` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `batch` int NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -175,7 +176,7 @@ CREATE TABLE `migrations` (
 
 LOCK TABLES `migrations` WRITE;
 /*!40000 ALTER TABLE `migrations` DISABLE KEYS */;
-INSERT INTO `migrations` VALUES (1,'0001_01_01_000000_create_users_table',1),(2,'0001_01_01_000001_create_cache_table',1),(3,'0001_01_01_000002_create_jobs_table',1),(4,'2026_03_17_000003_create_orders_table',2),(5,'2026_03_17_092734_add_two_factor_columns_to_users_table',3);
+INSERT INTO `migrations` VALUES (1,'0001_01_01_000000_create_users_table',1),(2,'0001_01_01_000001_create_cache_table',1),(3,'0001_01_01_000002_create_jobs_table',1),(4,'2026_03_17_000003_create_orders_table',2),(5,'2026_03_17_092734_add_two_factor_columns_to_users_table',3),(6,'2026_06_18_114041_create_products_table',4),(7,'2026_06_21_000001_add_product_snapshot_to_orders_table',4),(8,'2026_07_02_000001_add_shipping_fields_to_products_table',5),(9,'2026_07_02_000002_add_shipping_fields_to_orders_table',5);
 /*!40000 ALTER TABLE `migrations` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -191,8 +192,17 @@ CREATE TABLE `orders` (
   `customer_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `customer_phone` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL,
   `customer_address` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `product_id` bigint unsigned DEFAULT NULL,
+  `product_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `quantity` int unsigned NOT NULL,
   `unit_price` bigint unsigned NOT NULL,
+  `subtotal_amount` bigint unsigned NOT NULL DEFAULT '0',
+  `shipping_amount` bigint unsigned NOT NULL DEFAULT '0',
+  `shipping_courier` varchar(30) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `shipping_service` varchar(80) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `shipping_etd` varchar(80) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `shipping_destination_id` varchar(30) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `shipping_response` json DEFAULT NULL,
   `total_amount` bigint unsigned NOT NULL,
   `payment_method` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
   `status` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'pending',
@@ -205,8 +215,10 @@ CREATE TABLE `orders` (
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `orders_merchant_ref_index` (`merchant_ref`),
-  KEY `orders_tripay_reference_index` (`tripay_reference`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  KEY `orders_tripay_reference_index` (`tripay_reference`),
+  KEY `orders_product_id_foreign` (`product_id`),
+  CONSTRAINT `orders_product_id_foreign` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE SET NULL
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -215,7 +227,7 @@ CREATE TABLE `orders` (
 
 LOCK TABLES `orders` WRITE;
 /*!40000 ALTER TABLE `orders` DISABLE KEYS */;
-INSERT INTO `orders` VALUES (1,'padias','085232132528','jl mh thamrin gladak pakem',2,35000,70000,'qris','waiting_payment','FN-20260317083227-HZHNR',NULL,NULL,NULL,NULL,'2026-03-17 01:32:27','2026-03-17 01:32:27');
+INSERT INTO `orders` VALUES (1,'padias','085232132528','jl mh thamrin gladak pakem',NULL,NULL,2,35000,0,0,NULL,NULL,NULL,NULL,NULL,70000,'qris','waiting_payment','FN-20260317083227-HZHNR',NULL,NULL,NULL,NULL,'2026-03-17 01:32:27','2026-03-17 01:32:27'),(2,'padias','085859714058','Jember',1,'Fine Nectar Honey 200ml',1,35000,0,0,NULL,NULL,NULL,NULL,NULL,35000,'qris','tripay_failed','FN-20260622081526-DQUTI',NULL,NULL,NULL,'{\"message\": \"Invalid API Key\", \"success\": false}','2026-06-22 01:15:26','2026-06-22 01:15:27'),(3,'padias','085859714058','Jember',2,'Fine Nectar Daily Bundle',1,99000,0,0,NULL,NULL,NULL,NULL,NULL,99000,'qris','tripay_failed','FN-20260622085032-0NQXM',NULL,NULL,NULL,'{\"message\": \"Invalid API Key\", \"success\": false}','2026-06-22 01:50:32','2026-06-22 01:50:32'),(4,'padias','085859714058','Jember',1,'Fine Nectar Honey 200ml',1,35000,0,0,NULL,NULL,NULL,NULL,NULL,35000,'qris','waiting_payment','FN-20260622090020-N62H1','DEV-T16923380580XED9S','https://tripay.co.id/checkout/DEV-T16923380580XED9S','https://tripay.co.id/qr/DEV-T16923380580XED9S','{\"data\": {\"amount\": 35995, \"qr_url\": \"https://tripay.co.id/qr/DEV-T16923380580XED9S\", \"status\": \"UNPAID\", \"pay_url\": null, \"pay_code\": null, \"qr_string\": \"SANDBOX MODE\", \"reference\": \"DEV-T16923380580XED9S\", \"total_fee\": 995, \"return_url\": \"http://localhost:8000/#order\", \"order_items\": [{\"sku\": \"FN-1\", \"name\": \"Fine Nectar Honey 200ml\", \"price\": 35000, \"quantity\": 1, \"subtotal\": 35000, \"image_url\": null, \"product_url\": \"http://localhost:8000/produk/fine-nectar-honey-200ml\"}], \"callback_url\": \"http://localhost:8000/payments/tripay/callback\", \"checkout_url\": \"https://tripay.co.id/checkout/DEV-T16923380580XED9S\", \"expired_time\": 1782205161, \"fee_customer\": 995, \"fee_merchant\": 0, \"instructions\": [{\"steps\": [\"Masuk ke aplikasi dompet digital Anda yang telah mendukung QRIS\", \"Pindai/Scan QR Code yang tersedia\", \"Akan muncul detail transaksi. Pastikan data transaksi sudah sesuai\", \"Selesaikan proses pembayaran Anda\", \"Transaksi selesai. Simpan bukti pembayaran Anda\"], \"title\": \"Pembayaran via QRIS\"}, {\"steps\": [\"Download QR Code pada invoice\", \"Masuk ke aplikasi dompet digital Anda yang telah mendukung QRIS\", \"Upload QR Code yang telah di download tadi\", \"Akan muncul detail transaksi. Pastikan data transaksi sudah sesuai\", \"Selesaikan proses pembayaran Anda\", \"Transaksi selesai. Simpan bukti pembayaran Anda\"], \"title\": \"Pembayaran via QRIS (Mobile)\"}], \"merchant_ref\": \"FN-20260622090020-N62H1\", \"payment_name\": \"QRIS\", \"customer_name\": \"padias\", \"customer_email\": \"customer+4@finenectar.local\", \"customer_phone\": \"085859714058\", \"payment_method\": \"QRIS2\", \"amount_received\": 35000, \"payment_selection_type\": \"static\"}, \"message\": \"\", \"success\": true}','2026-06-22 02:00:20','2026-06-22 02:00:21'),(5,'padias','081233151566','jmbrrr',1,'Fine Nectar Honey 200ml',1,35000,0,0,NULL,NULL,NULL,NULL,NULL,35000,'qris','waiting_payment','FN-20260627062608-VRYJV','DEV-T16923382097IZJJA','https://tripay.co.id/checkout/DEV-T16923382097IZJJA','https://tripay.co.id/qr/DEV-T16923382097IZJJA','{\"data\": {\"amount\": 35995, \"qr_url\": \"https://tripay.co.id/qr/DEV-T16923382097IZJJA\", \"status\": \"UNPAID\", \"pay_url\": null, \"pay_code\": null, \"qr_string\": \"SANDBOX MODE\", \"reference\": \"DEV-T16923382097IZJJA\", \"total_fee\": 995, \"return_url\": \"http://localhost:8000/#order\", \"order_items\": [{\"sku\": \"FN-1\", \"name\": \"Fine Nectar Honey 200ml\", \"price\": 35000, \"quantity\": 1, \"subtotal\": 35000, \"image_url\": null, \"product_url\": \"http://localhost:8000/produk/fine-nectar-honey-200ml\"}], \"callback_url\": \"http://localhost:8000/payments/tripay/callback\", \"checkout_url\": \"https://tripay.co.id/checkout/DEV-T16923382097IZJJA\", \"expired_time\": 1782627909, \"fee_customer\": 995, \"fee_merchant\": 0, \"instructions\": [{\"steps\": [\"Masuk ke aplikasi dompet digital Anda yang telah mendukung QRIS\", \"Pindai/Scan QR Code yang tersedia\", \"Akan muncul detail transaksi. Pastikan data transaksi sudah sesuai\", \"Selesaikan proses pembayaran Anda\", \"Transaksi selesai. Simpan bukti pembayaran Anda\"], \"title\": \"Pembayaran via QRIS\"}, {\"steps\": [\"Download QR Code pada invoice\", \"Masuk ke aplikasi dompet digital Anda yang telah mendukung QRIS\", \"Upload QR Code yang telah di download tadi\", \"Akan muncul detail transaksi. Pastikan data transaksi sudah sesuai\", \"Selesaikan proses pembayaran Anda\", \"Transaksi selesai. Simpan bukti pembayaran Anda\"], \"title\": \"Pembayaran via QRIS (Mobile)\"}], \"merchant_ref\": \"FN-20260627062608-VRYJV\", \"payment_name\": \"QRIS\", \"customer_name\": \"padias\", \"customer_email\": \"customer+5@finenectar.local\", \"customer_phone\": \"081233151566\", \"payment_method\": \"QRIS2\", \"amount_received\": 35000, \"payment_selection_type\": \"static\"}, \"message\": \"\", \"success\": true}','2026-06-26 23:26:08','2026-06-26 23:26:09'),(6,'hilmy','6281233151566','Jember',1,'Fine Nectar Honey 200ml',1,35000,0,0,NULL,NULL,NULL,NULL,NULL,35000,'qris','waiting_payment','FN-20260627072232-1GRP9','DEV-T16923382107HUBEJ','https://tripay.co.id/checkout/DEV-T16923382107HUBEJ','https://tripay.co.id/qr/DEV-T16923382107HUBEJ','{\"data\": {\"amount\": 35995, \"qr_url\": \"https://tripay.co.id/qr/DEV-T16923382107HUBEJ\", \"status\": \"UNPAID\", \"pay_url\": null, \"pay_code\": null, \"qr_string\": \"SANDBOX MODE\", \"reference\": \"DEV-T16923382107HUBEJ\", \"total_fee\": 995, \"return_url\": \"http://localhost:8000/#order\", \"order_items\": [{\"sku\": \"FN-1\", \"name\": \"Fine Nectar Honey 200ml\", \"price\": 35000, \"quantity\": 1, \"subtotal\": 35000, \"image_url\": null, \"product_url\": \"http://localhost:8000/produk/fine-nectar-honey-200ml\"}], \"callback_url\": \"http://localhost:8000/payments/tripay/callback\", \"checkout_url\": \"https://tripay.co.id/checkout/DEV-T16923382107HUBEJ\", \"expired_time\": 1782631292, \"fee_customer\": 995, \"fee_merchant\": 0, \"instructions\": [{\"steps\": [\"Masuk ke aplikasi dompet digital Anda yang telah mendukung QRIS\", \"Pindai/Scan QR Code yang tersedia\", \"Akan muncul detail transaksi. Pastikan data transaksi sudah sesuai\", \"Selesaikan proses pembayaran Anda\", \"Transaksi selesai. Simpan bukti pembayaran Anda\"], \"title\": \"Pembayaran via QRIS\"}, {\"steps\": [\"Download QR Code pada invoice\", \"Masuk ke aplikasi dompet digital Anda yang telah mendukung QRIS\", \"Upload QR Code yang telah di download tadi\", \"Akan muncul detail transaksi. Pastikan data transaksi sudah sesuai\", \"Selesaikan proses pembayaran Anda\", \"Transaksi selesai. Simpan bukti pembayaran Anda\"], \"title\": \"Pembayaran via QRIS (Mobile)\"}], \"merchant_ref\": \"FN-20260627072232-1GRP9\", \"payment_name\": \"QRIS\", \"customer_name\": \"hilmy\", \"customer_email\": \"customer+6@finenectar.local\", \"customer_phone\": null, \"payment_method\": \"QRIS2\", \"amount_received\": 35000, \"payment_selection_type\": \"static\"}, \"message\": \"\", \"success\": true}','2026-06-27 00:22:32','2026-06-27 00:22:32'),(7,'padias','6285859714058','Jember',1,'Fine Nectar Honey 200ml',1,35000,0,0,NULL,NULL,NULL,NULL,NULL,35000,'qris','waiting_payment','FN-20260627072405-U2ODV','DEV-T16923382108BGNCY','https://tripay.co.id/checkout/DEV-T16923382108BGNCY','https://tripay.co.id/qr/DEV-T16923382108BGNCY','{\"data\": {\"amount\": 35995, \"qr_url\": \"https://tripay.co.id/qr/DEV-T16923382108BGNCY\", \"status\": \"UNPAID\", \"pay_url\": null, \"pay_code\": null, \"qr_string\": \"SANDBOX MODE\", \"reference\": \"DEV-T16923382108BGNCY\", \"total_fee\": 995, \"return_url\": \"http://localhost:8000/#order\", \"order_items\": [{\"sku\": \"FN-1\", \"name\": \"Fine Nectar Honey 200ml\", \"price\": 35000, \"quantity\": 1, \"subtotal\": 35000, \"image_url\": null, \"product_url\": \"http://localhost:8000/produk/fine-nectar-honey-200ml\"}], \"callback_url\": \"http://localhost:8000/payments/tripay/callback\", \"checkout_url\": \"https://tripay.co.id/checkout/DEV-T16923382108BGNCY\", \"expired_time\": 1782631385, \"fee_customer\": 995, \"fee_merchant\": 0, \"instructions\": [{\"steps\": [\"Masuk ke aplikasi dompet digital Anda yang telah mendukung QRIS\", \"Pindai/Scan QR Code yang tersedia\", \"Akan muncul detail transaksi. Pastikan data transaksi sudah sesuai\", \"Selesaikan proses pembayaran Anda\", \"Transaksi selesai. Simpan bukti pembayaran Anda\"], \"title\": \"Pembayaran via QRIS\"}, {\"steps\": [\"Download QR Code pada invoice\", \"Masuk ke aplikasi dompet digital Anda yang telah mendukung QRIS\", \"Upload QR Code yang telah di download tadi\", \"Akan muncul detail transaksi. Pastikan data transaksi sudah sesuai\", \"Selesaikan proses pembayaran Anda\", \"Transaksi selesai. Simpan bukti pembayaran Anda\"], \"title\": \"Pembayaran via QRIS (Mobile)\"}], \"merchant_ref\": \"FN-20260627072405-U2ODV\", \"payment_name\": \"QRIS\", \"customer_name\": \"padias\", \"customer_email\": \"customer+7@finenectar.local\", \"customer_phone\": null, \"payment_method\": \"QRIS2\", \"amount_received\": 35000, \"payment_selection_type\": \"static\"}, \"message\": \"\", \"success\": true}','2026-06-27 00:24:05','2026-06-27 00:24:05');
 /*!40000 ALTER TABLE `orders` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -244,6 +256,46 @@ LOCK TABLES `password_reset_tokens` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `products`
+--
+
+DROP TABLE IF EXISTS `products`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `products` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `slug` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `description` text COLLATE utf8mb4_unicode_ci,
+  `price` bigint unsigned NOT NULL,
+  `compare_at_price` bigint unsigned DEFAULT NULL,
+  `image_url` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `net_weight` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `weight_grams` int unsigned NOT NULL DEFAULT '1000',
+  `category` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `stock` int unsigned NOT NULL DEFAULT '0',
+  `is_active` tinyint(1) NOT NULL DEFAULT '1',
+  `is_featured` tinyint(1) NOT NULL DEFAULT '0',
+  `is_promo` tinyint(1) NOT NULL DEFAULT '0',
+  `is_free_shipping` tinyint(1) NOT NULL DEFAULT '0',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `products_slug_unique` (`slug`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `products`
+--
+
+LOCK TABLES `products` WRITE;
+/*!40000 ALTER TABLE `products` DISABLE KEYS */;
+INSERT INTO `products` VALUES (1,'Fine Nectar Honey 200ml','fine-nectar-honey-200ml','Madu murni premium untuk rutinitas pagi, campuran minuman, dan energi harian.',35000,55000,'/storage/products/vwPz7TgFpJw2fuaMXNBYZ8FoDpoDkyiBRnDl7gpq.jpg','200ml',1000,'Madu konsumsi harian',100,1,0,1,0,'2026-06-20 23:16:52','2026-07-02 08:42:29'),(2,'Fine Nectar Daily Bundle','fine-nectar-daily-bundle','Paket hemat untuk stok madu di rumah atau kantor.',99000,165000,'/storage/products/OVFncYUGPAcQJJsdjNqfkabxHXStdRJNQUVKYXMN.jpg','3 x 200ml',1000,'Bundle',40,1,1,0,1,'2026-06-20 23:16:52','2026-07-02 08:42:53');
+/*!40000 ALTER TABLE `products` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `sessions`
 --
 
@@ -269,7 +321,7 @@ CREATE TABLE `sessions` (
 
 LOCK TABLES `sessions` WRITE;
 /*!40000 ALTER TABLE `sessions` DISABLE KEYS */;
-INSERT INTO `sessions` VALUES ('9qSYR4tdpWRNOQYcpq5tO3q7RIbyCBfDKKynvaSJ',NULL,'127.0.0.1','Mozilla/5.0 (iPhone; CPU iPhone OS 18_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Mobile/15E148 Safari/604.1','YTozOntzOjY6Il90b2tlbiI7czo0MDoiazdrd3VPS2g0Q1VUZm8yY3Exb1pGYnBONmk2T2ZoQm5FNDZqa0dkSyI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6MjE6Imh0dHA6Ly9sb2NhbGhvc3Q6ODAwMCI7czo1OiJyb3V0ZSI7Tjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==',1773977505),('aXxbWG21v5Nnr9RNA1QiHfrvz7WVWf0SturayW3R',NULL,'127.0.0.1','Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36','YTozOntzOjY6Il90b2tlbiI7czo0MDoiVWRvTGQ0dFAzaXpyNlVUTFloeTRQcW8yN1VuZjhiR01mM2tLZDBkMSI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6MjE6Imh0dHA6Ly9sb2NhbGhvc3Q6ODAwMCI7czo1OiJyb3V0ZSI7Tjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==',1773974490),('fmY8qwHCPfcNfFTnAC3y6TxYOy0LfbbQ66rez5Op',NULL,'127.0.0.1','Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36','YTozOntzOjY6Il90b2tlbiI7czo0MDoiaTVXa3RSaXlTMlMyeFRKMmJjTm1GR3Jrd3hPajhlWUhCcTV3aUQ2QyI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6MjE6Imh0dHA6Ly9sb2NhbGhvc3Q6ODAwMCI7czo1OiJyb3V0ZSI7Tjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==',1774007450);
+INSERT INTO `sessions` VALUES ('YhtVW3KJZZMmHgtATE9hvjs2ScgTkgqv32bUnXdD',2,'127.0.0.1','Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36','YTo1OntzOjY6Il90b2tlbiI7czo0MDoiSGw3eVRpY0NJNTkyV1Z5blB2OFZZM2ZoNDcxMnZPVGp3MVlPWjlQVCI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6MzQ6Imh0dHA6Ly9sb2NhbGhvc3Q6ODAwMC9hZG1pbi9vcmRlcnMiO3M6NToicm91dGUiO3M6MTg6ImFkbWluLm9yZGVycy5pbmRleCI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fXM6MzoidXJsIjthOjA6e31zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aToyO30=',1783008708);
 /*!40000 ALTER TABLE `sessions` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -316,4 +368,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-06-18 18:41:54
+-- Dump completed on 2026-07-03  0:44:55
