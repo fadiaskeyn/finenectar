@@ -14,15 +14,25 @@ pipeline {
             }
         }
 
-        stage('Prepare Environment') {
+        stage('Prepare Environment & Tools') {
             steps {
                 script {
-                    echo 'Preparing environment files...'
+                    echo 'Preparing environment & checking Docker Compose tool...'
                     sh '''
                         if [ ! -f .env ]; then
-                            echo ".env file not found. Copying .env..."
+                            echo ".env file not found. Copying .env.example..."
                             cp .env.example .env
-                            # Generate key if needed inside container later
+                        fi
+
+                        mkdir -p bin
+                        if docker compose version >/dev/null 2>&1; then
+                            echo "Docker Compose plugin is available."
+                        elif [ -f bin/docker-compose ]; then
+                            echo "Using local bin/docker-compose."
+                        else
+                            echo "Docker Compose plugin missing in container. Downloading standalone docker-compose..."
+                            curl -sSL "https://github.com/docker/compose/releases/download/v2.29.1/docker-compose-linux-x86_64" -o bin/docker-compose
+                            chmod +x bin/docker-compose
                         fi
                     '''
                 }
@@ -32,14 +42,28 @@ pipeline {
         stage('Build Containers') {
             steps {
                 echo 'Building Docker images...'
-                sh 'docker compose build --no-cache'
+                sh '''
+                    export PATH="$(pwd)/bin:$PATH"
+                    if [ -f bin/docker-compose ]; then
+                        bin/docker-compose build
+                    else
+                        docker compose build
+                    fi
+                '''
             }
         }
 
         stage('Deploy & Start Services') {
             steps {
                 echo 'Starting Docker Compose stack...'
-                sh 'docker compose up -d'
+                sh '''
+                    export PATH="$(pwd)/bin:$PATH"
+                    if [ -f bin/docker-compose ]; then
+                        bin/docker-compose up -d
+                    else
+                        docker compose up -d
+                    fi
+                '''
             }
         }
 
@@ -47,17 +71,21 @@ pipeline {
             steps {
                 echo 'Running Laravel database migrations and optimization commands...'
                 sh '''
-                    # Wait for database container to be ready
+                    export PATH="$(pwd)/bin:$PATH"
+                    DC="docker compose"
+                    if [ -f bin/docker-compose ]; then
+                        DC="bin/docker-compose"
+                    fi
+
                     echo "Waiting for MySQL database..."
                     sleep 10
 
-                    # Run migrations and cache commands inside app container
-                    docker compose exec -T app php artisan key:generate --force || true
-                    docker compose exec -T app php artisan migrate --force
-                    docker compose exec -T app php artisan config:cache
-                    docker compose exec -T app php artisan route:cache
-                    docker compose exec -T app php artisan view:cache
-                    docker compose exec -T app php artisan storage:link || true
+                    $DC exec -T app php artisan key:generate --force || true
+                    $DC exec -T app php artisan migrate --force
+                    $DC exec -T app php artisan config:cache
+                    $DC exec -T app php artisan route:cache
+                    $DC exec -T app php artisan view:cache
+                    $DC exec -T app php artisan storage:link || true
                 '''
             }
         }
@@ -83,7 +111,14 @@ pipeline {
         }
         failure {
             echo 'Deployment failed! Checking logs...'
-            sh 'docker compose logs -n 50'
+            sh '''
+                export PATH="$(pwd)/bin:$PATH"
+                DC="docker compose"
+                if [ -f bin/docker-compose ]; then
+                    DC="bin/docker-compose"
+                fi
+                $DC logs --tail=50 || $DC logs
+            '''
         }
     }
 }
