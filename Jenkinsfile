@@ -14,19 +14,21 @@ pipeline {
             }
         }
 
-        stage('Prepare Environment & Tools') {
+        stage('Prepare Environment & Credentials') {
             steps {
-                script {
-                    echo 'Preparing environment & checking Docker Compose tool...'
+                echo 'Preparing .env file from Jenkins Secret Credentials...'
+                withCredentials([file(credentialsId: 'finenectar-env', variable: 'SECRET_ENV')]) {
                     sh '''
-                        if [ ! -f .env ]; then
-                            echo ".env file not found. Copying .env.example..."
-                            cp .env.example .env
-                        fi
-
+                        cp "$SECRET_ENV" .env
+                        echo "Successfully copied secret .env file."
+                    '''
+                }
+                script {
+                    echo 'Checking Docker Compose tool availability...'
+                    sh '''
                         mkdir -p bin
                         if docker compose version >/dev/null 2>&1; then
-                            echo "Docker Compose plugin is available."
+                            echo "Docker Compose CLI plugin is available."
                         elif [ -f bin/docker-compose ]; then
                             echo "Using local bin/docker-compose."
                         else
@@ -77,8 +79,8 @@ pipeline {
                         DC="bin/docker-compose"
                     fi
 
-                    echo "Waiting for MySQL database..."
-                    sleep 100
+                    echo "Waiting for database container..."
+                    sleep 10
 
                     $DC exec -T app php artisan key:generate --force || true
                     $DC exec -T app php artisan migrate --force
@@ -100,16 +102,7 @@ pipeline {
                 '''
             }
         }
-        stage('Prepare env') {
-            steps {
-                echo 'Copy .env from global'
-                WithCredentials([file(credentialsId: 'finenectar-env', variable: 'SECRET_ENV')])
-                sh '''
-                    cp "$SECRET_ENV" .env
-                    echo "succes copying .env"
-                '''
-            }
-        }
+    }
 
     post {
         always {
