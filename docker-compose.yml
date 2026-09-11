@@ -28,14 +28,15 @@ services:
       - finenectar_net
 
   webserver:
-    image: nginx:alpine
+    build:
+      context: .
+      dockerfile: docker/nginx/Dockerfile
     container_name: finenectar_webserver
     restart: unless-stopped
     ports:
       - "${PORT:-8000}:80"
     volumes:
       - public_data:/var/www/public:ro
-      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
     depends_on:
       - app
     networks:
