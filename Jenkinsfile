@@ -78,7 +78,7 @@ pipeline {
                     fi
 
                     echo "Waiting for MySQL database..."
-                    sleep 10
+                    sleep 100
 
                     $DC exec -T app php artisan key:generate --force || true
                     $DC exec -T app php artisan migrate --force
@@ -100,7 +100,16 @@ pipeline {
                 '''
             }
         }
-    }
+        stage('Prepare env') {
+            steps {
+                echo 'Copy .env from global'
+                WithCredentials([file(credentialsId: 'finenectar-env', variable: 'SECRET_ENV')])
+                sh '''
+                    cp "$SECRET_ENV" .env
+                    echo "succes copying .env"
+                '''
+            }
+        }
 
     post {
         always {
