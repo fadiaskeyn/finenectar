@@ -20,8 +20,8 @@ pipeline {
                     echo 'Preparing environment files...'
                     sh '''
                         if [ ! -f .env ]; then
-                            echo ".env file not found. Copying .env.docker..."
-                            cp .env.docker .env
+                            echo ".env file not found. Copying .env..."
+                            cp .env.example .env
                             # Generate key if needed inside container later
                         fi
                     '''
