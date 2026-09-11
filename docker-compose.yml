@@ -49,8 +49,6 @@ services:
     volumes:
       - db_data:/var/lib/mysql
       - ./fine.sql:/docker-entrypoint-initdb.d/01_fine.sql:ro
-    ports:
-      - "3307:3306"
     networks:
       - finenectar_net
     healthcheck:
