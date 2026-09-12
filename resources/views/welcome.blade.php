@@ -107,7 +107,7 @@
                                 Ritual Tenang dari Alam
                             </span>
                             <h1 class="mt-4 text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl lg:text-6xl">
-                                Biar hari terasa lebih ringan dan tenang dengan
+                               Biar hari terasa lebih ringan dan tenang dengan (Test Perubahan 1)
                                 <span class="bg-gradient-to-r from-orange-500 to-amber-400 bg-clip-text text-transparent">Fine Nectar</span>
                             </h1>
                             <p class="mt-4 max-w-xl text-base text-zinc-700 sm:text-lg">
